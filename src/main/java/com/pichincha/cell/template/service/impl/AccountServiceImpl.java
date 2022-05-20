@@ -52,7 +52,7 @@ public class AccountServiceImpl implements AccountService {
         if (accountOptional.isEmpty()) {
             resourceNotFound(id);
         }
-        return Mapper.modelMapper().map(accountRepository.save(accountOptional.get()), AccountDto.class);
+        return Mapper.modelMapper().map(accountOptional.get(), AccountDto.class);
     }
 
     /**

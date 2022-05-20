@@ -52,7 +52,7 @@ public class CustomerServiceImpl implements CustomerService {
         if (customerOptional.isEmpty()) {
             resourceNotFound(id);
         }
-        return Mapper.modelMapper().map(customerRepository.save(customerOptional.get()), CustomerDto.class);
+        return Mapper.modelMapper().map(customerOptional.get(), CustomerDto.class);
     }
 
     /**
@@ -64,7 +64,7 @@ public class CustomerServiceImpl implements CustomerService {
         if (customerOptional.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format("Customer with DNI %s not found", dni));
         }
-        return Mapper.modelMapper().map(customerRepository.save(customerOptional.get()), CustomerDto.class);
+        return Mapper.modelMapper().map(customerOptional.get(), CustomerDto.class);
     }
 
     /**

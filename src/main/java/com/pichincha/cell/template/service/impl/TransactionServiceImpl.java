@@ -53,7 +53,7 @@ public class TransactionServiceImpl implements TransactionService {
         if (transactionOptional.isEmpty()) {
             resourceNotFound(id);
         }
-        return Mapper.modelMapper().map(transactionRepository.save(transactionOptional.get()), TransactionDto.class);
+        return Mapper.modelMapper().map(transactionOptional.get(), TransactionDto.class);
     }
 
     /**

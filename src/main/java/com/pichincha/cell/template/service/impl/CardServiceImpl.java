@@ -52,7 +52,7 @@ public class CardServiceImpl implements CardService {
         if (cardOptional.isEmpty()) {
             resourceNotFound(id);
         }
-        return Mapper.modelMapper().map(cardRepository.save(cardOptional.get()), CardDto.class);
+        return Mapper.modelMapper().map(cardOptional.get(), CardDto.class);
     }
 
     /**
