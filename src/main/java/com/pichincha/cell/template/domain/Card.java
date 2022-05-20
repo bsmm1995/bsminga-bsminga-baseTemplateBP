@@ -1,6 +1,6 @@
 package com.pichincha.cell.template.domain;
 
-import com.pichincha.cell.template.domain.base.Audit;
+import com.pichincha.cell.template.domain.base.AuditMetadata;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +10,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity(name = "CARD")
-public class Card extends Audit {
+public class Card extends AuditMetadata {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID", nullable = false)

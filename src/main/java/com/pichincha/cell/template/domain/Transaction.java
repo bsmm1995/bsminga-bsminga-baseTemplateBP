@@ -1,6 +1,6 @@
 package com.pichincha.cell.template.domain;
 
-import com.pichincha.cell.template.domain.base.Audit;
+import com.pichincha.cell.template.domain.base.AuditMetadata;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @Entity(name = "TRANSACTION")
-public class Transaction extends Audit {
+public class Transaction extends AuditMetadata {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID", nullable = false)

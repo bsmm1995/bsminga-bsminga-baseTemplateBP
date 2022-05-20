@@ -1,6 +1,6 @@
 package com.pichincha.cell.template.domain;
 
-import com.pichincha.cell.template.domain.base.Audit;
+import com.pichincha.cell.template.domain.base.AuditMetadata;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 @RequiredArgsConstructor
 @Entity(name = "ACCOUNT")
-public class Account extends Audit {
+public class Account extends AuditMetadata {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID", nullable = false)
