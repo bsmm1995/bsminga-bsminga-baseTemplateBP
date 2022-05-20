@@ -1,11 +1,9 @@
 package com.pichincha.cell.template.controller;
 
-import com.pichincha.cell.template.domain.base.ResponseDto;
 import com.pichincha.cell.template.domain.dto.CardDto;
 import com.pichincha.cell.template.service.CardService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,9 +29,9 @@ public class CardController {
      * @return Card found
      */
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ResponseDto> getCard(@PathVariable("id") Long id) {
+    public ResponseEntity<CardDto> getCard(@PathVariable("id") Long id) {
         log.info("Endpoint to get an account by ID: id=" + id);
-        return new ResponseEntity<>(new ResponseDto(cardService.getCardById(id), "Record found"), new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<>(cardService.getCardById(id), HttpStatus.OK);
     }
 
     /**
@@ -42,10 +40,9 @@ public class CardController {
      * @return All cards found
      */
     @GetMapping()
-    public ResponseEntity<ResponseDto> getAllCards() {
+    public ResponseEntity<List<CardDto>> getAllCards() {
         log.info("Endpoint to get all cards");
-        List<CardDto> result = cardService.getAllCards();
-        return new ResponseEntity<>(new ResponseDto(result, String.format("%d Records found", result.size())), new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<>(cardService.getAllCards(), HttpStatus.OK);
     }
 
     /**
@@ -55,9 +52,9 @@ public class CardController {
      * @return New card created
      */
     @PostMapping(headers = "Accept=application/json;charset=UTF-8")
-    public ResponseEntity<ResponseDto> saveCard(@RequestBody CardDto dto) {
+    public ResponseEntity<CardDto> saveCard(@RequestBody CardDto dto) {
         log.info("Endpoint to save an card: data=" + dto);
-        return new ResponseEntity<>(new ResponseDto(cardService.createCard(dto)), new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<>(cardService.createCard(dto), HttpStatus.OK);
     }
 
     /**
@@ -68,9 +65,9 @@ public class CardController {
      * @return Card updated
      */
     @PutMapping(value = "/{id}", headers = "Accept=application/json;charset=UTF-8")
-    public ResponseEntity<ResponseDto> updateCard(@PathVariable Long id, @RequestBody CardDto dto) {
+    public ResponseEntity<CardDto> updateCard(@PathVariable Long id, @RequestBody CardDto dto) {
         log.info("Endpoint to update a card: id=" + id + ", data=" + dto);
-        return new ResponseEntity<>(new ResponseDto(cardService.updateCard(id, dto)), new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<>(cardService.updateCard(id, dto), HttpStatus.OK);
     }
 
     /**
@@ -80,8 +77,8 @@ public class CardController {
      * @return ID of the card that was deleted
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto> deleteCard(@PathVariable Long id) {
+    public ResponseEntity<Long> deleteCard(@PathVariable Long id) {
         log.info("Endpoint to delete a card: id=" + id);
-        return new ResponseEntity<>(new ResponseDto(cardService.deleteCardById(id)), new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<>(cardService.deleteCardById(id), HttpStatus.OK);
     }
 }

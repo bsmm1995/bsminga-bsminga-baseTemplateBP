@@ -1,6 +1,5 @@
 package com.pichincha.cell.template.controller;
 
-import com.pichincha.cell.template.domain.base.ResponseDto;
 import com.pichincha.cell.template.domain.dto.AccountDto;
 import com.pichincha.cell.template.service.AccountService;
 import lombok.AllArgsConstructor;
@@ -31,9 +30,9 @@ public class AccountController {
      * @return Account found
      */
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ResponseDto> getAccount(@PathVariable("id") Long id) {
+    public ResponseEntity<AccountDto> getAccount(@PathVariable("id") Long id) {
         log.info("Endpoint to get an account by ID: id=" + id);
-        return new ResponseEntity<>(new ResponseDto(accountService.getAccountById(id), "Record found"), new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<>(accountService.getAccountById(id), HttpStatus.OK);
     }
 
     /**
@@ -42,10 +41,9 @@ public class AccountController {
      * @return All accounts found
      */
     @GetMapping()
-    public ResponseEntity<ResponseDto> getAllAccounts() {
+    public ResponseEntity<List<AccountDto>> getAllAccounts() {
         log.info("Endpoint to get all accounts");
-        List<AccountDto> result = accountService.getAllAccounts();
-        return new ResponseEntity<>(new ResponseDto(result, String.format("%d Records found", result.size())), new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<>(accountService.getAllAccounts(), HttpStatus.OK);
     }
 
     /**
@@ -55,9 +53,9 @@ public class AccountController {
      * @return New account created
      */
     @PostMapping(headers = "Accept=application/json;charset=UTF-8")
-    public ResponseEntity<ResponseDto> saveAccount(@RequestBody AccountDto dto) {
+    public ResponseEntity<AccountDto> saveAccount(@RequestBody AccountDto dto) {
         log.info("Endpoint to save an account: data=" + dto);
-        return new ResponseEntity<>(new ResponseDto(accountService.createAccount(dto)), new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<>(accountService.createAccount(dto), HttpStatus.OK);
     }
 
     /**
@@ -68,9 +66,9 @@ public class AccountController {
      * @return Account updated
      */
     @PutMapping(value = "/{id}", headers = "Accept=application/json;charset=UTF-8")
-    public ResponseEntity<ResponseDto> updateAccount(@PathVariable Long id, @RequestBody AccountDto dto) {
+    public ResponseEntity<AccountDto> updateAccount(@PathVariable Long id, @RequestBody AccountDto dto) {
         log.info("Endpoint to update an account: id=" + id + ", data= " + dto);
-        return new ResponseEntity<>(new ResponseDto(accountService.updateAccount(id, dto)), new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<>(accountService.updateAccount(id, dto), HttpStatus.OK);
     }
 
     /**
@@ -80,8 +78,8 @@ public class AccountController {
      * @return ID of the customer that was deleted
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto> deleteCustomer(@PathVariable Long id) {
+    public ResponseEntity<Long> deleteCustomer(@PathVariable Long id) {
         log.info("Endpoint to delete an account: id = " + id);
-        return new ResponseEntity<>(new ResponseDto(accountService.deleteAccountById(id)), new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<>(accountService.deleteAccountById(id), new HttpHeaders(), HttpStatus.OK);
     }
 }

@@ -1,11 +1,9 @@
 package com.pichincha.cell.template.controller;
 
-import com.pichincha.cell.template.domain.base.ResponseDto;
 import com.pichincha.cell.template.domain.dto.CustomerDto;
 import com.pichincha.cell.template.service.CustomerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -34,9 +32,9 @@ public class CustomerController {
      * @return Customer found
      */
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseDto> getCustomer(@PathVariable("id") Long id) {
+    public ResponseEntity<CustomerDto> getCustomer(@PathVariable("id") Long id) {
         log.info("Endpoint to get a customer by ID: id=" + id);
-        return new ResponseEntity<>(new ResponseDto(customerService.getCustomerById(id), "Record found"), new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<>(customerService.getCustomerById(id), HttpStatus.OK);
     }
 
     /**
@@ -46,9 +44,9 @@ public class CustomerController {
      * @return Customer found
      */
     @GetMapping("/search")
-    public ResponseEntity<ResponseDto> getCustomerByDni(@RequestParam("dni") String dni) {
+    public ResponseEntity<CustomerDto> getCustomerByDni(@RequestParam("dni") String dni) {
         log.info("Endpoint to get a customer by DNI: dni=" + dni);
-        return new ResponseEntity<>(new ResponseDto(customerService.getCustomerByDni(dni), "Record found"), new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<>(customerService.getCustomerByDni(dni), HttpStatus.OK);
     }
 
     /**
@@ -57,10 +55,9 @@ public class CustomerController {
      * @return All customers found
      */
     @GetMapping()
-    public ResponseEntity<ResponseDto> getAllCustomers() {
+    public ResponseEntity<List<CustomerDto>> getAllCustomers() {
         log.info("Endpoint to get all customers");
-        List<CustomerDto> result = customerService.getAllCustomers();
-        return new ResponseEntity<>(new ResponseDto(result, String.format("%d Records found", result.size())), new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<>(customerService.getAllCustomers(), HttpStatus.OK);
     }
 
     /**
@@ -70,7 +67,7 @@ public class CustomerController {
      * @return New customer created
      */
     @PostMapping(headers = "Accept=application/json;charset=UTF-8")
-    public ResponseEntity<ResponseDto> createCustomer(@RequestBody @Valid CustomerDto dto, BindingResult bindingResult) {
+    public ResponseEntity<CustomerDto> createCustomer(@RequestBody @Valid CustomerDto dto, BindingResult bindingResult) {
         log.info("Endpoint to create a customer: data=" + dto);
         if (bindingResult.hasErrors()) {
             log.error(bindingResult.getAllErrors().toString());
@@ -80,7 +77,7 @@ public class CustomerController {
             }
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, strBuilder.toString());
         }
-        return new ResponseEntity<>(new ResponseDto(customerService.createCustomer(dto)), new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<>(customerService.createCustomer(dto), HttpStatus.OK);
     }
 
     /**
@@ -91,9 +88,9 @@ public class CustomerController {
      * @return Customer updated
      */
     @PutMapping(value = "/{id}", headers = "Accept=application/json;charset=UTF-8")
-    public ResponseEntity<ResponseDto> updateCustomer(@PathVariable Long id, @RequestBody CustomerDto dto) {
+    public ResponseEntity<CustomerDto> updateCustomer(@PathVariable Long id, @RequestBody CustomerDto dto) {
         log.info("Endpoint to update a customer: id=" + id + ", data=" + dto);
-        return new ResponseEntity<>(new ResponseDto(customerService.updateCustomer(id, dto)), new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<>(customerService.updateCustomer(id, dto), HttpStatus.OK);
     }
 
     /**
@@ -103,8 +100,8 @@ public class CustomerController {
      * @return ID of the deleted client
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDto> deleteCustomer(@PathVariable("id") Long id) {
+    public ResponseEntity<Long> deleteCustomer(@PathVariable("id") Long id) {
         log.info("Endpoint to delete a customer: id=" + id);
-        return new ResponseEntity<>(new ResponseDto(customerService.deleteCustomerById(id)), new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<>(customerService.deleteCustomerById(id), HttpStatus.OK);
     }
 }
