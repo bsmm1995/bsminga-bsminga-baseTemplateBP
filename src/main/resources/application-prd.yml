@@ -2,14 +2,14 @@ server:
   port: 8080
 spring:
   datasource:
-    password: ${PASSWORD_BDD}
     url: jdbc:postgresql://${HOSTNAME_BDD}:5432/${NAME_BDD}
     username: ${USER_BDD}
+    password: ${PASSWORD_BDD}
   jpa:
     properties:
       hibernate:
         hbm2ddl:
-          auto: validate
+          auto: none
 
 springdoc:
   api-docs:

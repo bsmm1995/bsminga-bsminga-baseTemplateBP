@@ -4,13 +4,13 @@ server:
     include-message: always
 spring:
   datasource:
-    password: ${PASSWORD_BDD}
-    url: jdbc:postgresql://${HOSTNAME_BDD}:5432/${NAME_BDD}
-    username: ${USER_BDD}
+    url: jdbc:postgresql://kesavan.db.elephantsql.com:5432/koakpaxy
+    username: koakpaxy
+    password: 98y1eQwX2DMwXYgRdJaNqZH8EdTVFMpg
   jpa:
     generate-ddl: true
     properties:
       hibernate:
         hbm2ddl:
-          auto: create-drop
+          auto: update
     show-sql: true
