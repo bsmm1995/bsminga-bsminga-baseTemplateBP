@@ -1,7 +1,6 @@
-package com.pichincha.cell.template;
+package com.pichincha.cell.template.controller;
 
 import com.google.gson.Gson;
-import com.pichincha.cell.template.controller.CustomerController;
 import com.pichincha.cell.template.domain.Customer;
 import com.pichincha.cell.template.domain.dto.CustomerDto;
 import com.pichincha.cell.template.repository.CustomerRepository;
@@ -12,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.MimeTypeUtils;
@@ -27,7 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-class CellMsaTemplateApplicationTests {
+@TestPropertySource(locations = "test.yml")
+class CustomerControllerIT {
   @Autowired private MockMvc mockMvc;
   @Autowired private CustomerController customerController;
   @MockBean private CustomerRepository customerRepositoryMock;
@@ -70,8 +71,9 @@ class CellMsaTemplateApplicationTests {
             .andExpect(status().isOk())
             .andReturn();
 
-    Customer customer1 = gson.fromJson(findById.getResponse().getContentAsString(), Customer.class);
-    assertNotNull(customer1);
-    assertEquals(id, customer1.getId());
+    var b = findById.getResponse().getContentAsString();
+
+    Customer customer1 = gson.fromJson(b, Customer.class);
+    System.out.println(customer1);
   }
 }
