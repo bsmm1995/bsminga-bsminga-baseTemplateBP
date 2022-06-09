@@ -9,8 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 
 import java.util.Optional;
 
@@ -24,14 +22,12 @@ class CustomerControllerTest {
   // solo este obj se mockeara
   private CustomerRepository customerRepositoryMock;
   private CustomerController customerController;
-  private BindingResult bindingResultMock;
 
   @BeforeEach
   void setUp() { // este método siempre se ejecuta antes de cada test,
 
     // asignación de mocks manualmente
     customerRepositoryMock = Mockito.mock(CustomerRepository.class); // se mockea el obj repository
-    bindingResultMock = Mockito.mock(BindingResult.class); // se mockea el obj BindingResult
     customerController =
         new CustomerController(new CustomerServiceImpl(customerRepositoryMock), null);
   }
@@ -72,12 +68,10 @@ class CustomerControllerTest {
     customer.setLastname("Gómez");
 
     when(customerRepositoryMock.save(any())).thenReturn(customer);
-    when(bindingResultMock.hasErrors()).thenReturn(Boolean.FALSE);
 
-    ResponseEntity<CustomerDto> result = customerController.create(customerDto, bindingResultMock);
-    CustomerDto customerSaved = result.getBody();
+    CustomerDto result = customerController.create(customerDto);
 
-    assertNotNull(customerSaved);
-    assertNotNull(customerSaved.getId());
+    assertNotNull(result);
+    assertNotNull(result.getId());
   }
 }

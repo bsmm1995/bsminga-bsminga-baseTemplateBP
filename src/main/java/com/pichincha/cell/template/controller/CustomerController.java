@@ -7,12 +7,12 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -24,12 +24,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 /** Endpoints that manage the customers */
 @RestController
 @Slf4j
+@Validated
 @AllArgsConstructor
-@RequestMapping("/customers")
+@RequestMapping(value = "/customers", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CustomerController {
 
   private final CustomerService customerService;
-  private CustomerModelAssembler customerModelAssembler;
+  private final CustomerModelAssembler customerModelAssembler;
 
   /**
    * Find a customer by ID
@@ -60,15 +61,12 @@ public class CustomerController {
    *
    * @return All customers found
    */
-  @GetMapping()
+  @GetMapping
   public CollectionModel<EntityModel<CustomerDto>> getAll() {
     log.info("Endpoint to get all customers");
-    //
     List<EntityModel<CustomerDto>> customers = new ArrayList<>();
-    CustomerModelAssembler customerModelAssembler1 = customerModelAssembler;
     for (CustomerDto customerDto : customerService.getAllCustomers()) {
-      EntityModel<CustomerDto> customerDtoEntityModel =
-          customerModelAssembler1.toModel(customerDto);
+      EntityModel<CustomerDto> customerDtoEntityModel = customerModelAssembler.toModel(customerDto);
       customers.add(customerDtoEntityModel);
     }
 
@@ -83,18 +81,11 @@ public class CustomerController {
    * @return New customer created
    */
   @PostMapping(headers = "Accept=application/json;charset=UTF-8")
-  public ResponseEntity<CustomerDto> create(
-      @RequestBody @Valid CustomerDto dto, BindingResult bindingResult) {
+  @ResponseBody
+  @ResponseStatus(HttpStatus.CREATED)
+  public CustomerDto create(@RequestBody @Valid CustomerDto dto) {
     log.info("Endpoint to create a customer: data=" + dto);
-    if (bindingResult.hasErrors()) {
-      log.error(bindingResult.getAllErrors().toString());
-      StringBuilder strBuilder = new StringBuilder();
-      for (FieldError error : bindingResult.getFieldErrors()) {
-        strBuilder.append(error.getDefaultMessage()).append(System.getProperty("line.separator"));
-      }
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, strBuilder.toString());
-    }
-    return new ResponseEntity<>(customerService.createCustomer(dto), HttpStatus.OK);
+    return customerService.createCustomer(dto);
   }
 
   /**
@@ -105,9 +96,10 @@ public class CustomerController {
    * @return Customer updated
    */
   @PutMapping(value = "/{id}", headers = "Accept=application/json;charset=UTF-8")
-  public ResponseEntity<CustomerDto> update(@PathVariable Long id, @RequestBody CustomerDto dto) {
+  public ResponseEntity<CustomerDto> update(
+      @PathVariable Long id, @RequestBody @Valid CustomerDto dto) {
     log.info("Endpoint to update a customer: id=" + id + ", data=" + dto);
-    return new ResponseEntity<>(customerService.updateCustomer(id, dto), HttpStatus.OK);
+    return ResponseEntity.ok(customerService.updateCustomer(id, dto));
   }
 
   /**
@@ -119,6 +111,8 @@ public class CustomerController {
   @DeleteMapping("/{id}")
   public ResponseEntity<Long> delete(@PathVariable("id") Long id) {
     log.info("Endpoint to delete a customer: id=" + id);
-    return new ResponseEntity<>(customerService.deleteCustomerById(id), HttpStatus.OK);
+    HttpHeaders headers = new HttpHeaders();
+    headers.add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
+    return new ResponseEntity<>(customerService.deleteCustomerById(id), headers, HttpStatus.OK);
   }
 }
